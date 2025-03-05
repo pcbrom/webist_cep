@@ -3,21 +3,21 @@ import re
 from sentence_transformers import SentenceTransformer
 import chromadb
 
-# Caminho do arquivo
+# File path
 file_path = "Amostra100AvalCEP.txt"
 
-# Conectar ao ChromaDB
+# Connect to ChromaDB
 client = chromadb.PersistentClient(path="chroma_db")
 collection = client.get_collection(name="cep")
 
-# Carregar o modelo Sentence Transformer
+# Load Sentence Transformer model
 model_sentence = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
 
-# Ler o conteúdo do arquivo
+# Read file content
 with open(file_path, "r", encoding="utf-8") as file:
     lines = file.readlines()
 
-# Processar o conteúdo para extrair os prompts e baselines
+# Process content to extract prompts and baselines
 data = []
 for i in range(0, len(lines)):
     prompt_line = re.search(r'"content": responda a seguinte pergunta: (.*?)",', lines[i])
@@ -35,7 +35,7 @@ for i in range(0, len(lines)):
     if prompt and baseline: # only append if both prompt and baseline are not None
         data.append({"prompt": prompt, "baseline": baseline})
  
-# Criar DataFrame
+# Create DataFrame
 df = pd.DataFrame(data)
 
 def retrieve_context(prompt, model_sentence, collection):

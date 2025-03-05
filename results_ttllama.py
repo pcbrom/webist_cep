@@ -13,8 +13,8 @@ dotenv_path = "/mnt/4d4f90e5-f220-481e-8701-f0a546491c35/arquivos/projetos/.env"
 load_dotenv(dotenv_path=dotenv_path)
 
 # Define the local model path
-model_path = "/mnt/4d4f90e5-f220-481e-8701-f0a546491c35/arquivos/hf_models/vinidiol/TeenyTinyLlama-160m-CEP-ft"
-model_name = "TeenyTinyLlama-160m-CEP-ft"
+model_path = "/mnt/4d4f90e5-f220-481e-8701-f0a546491c35/arquivos/hf_models/vinidiol/TeenyTinyLlama"
+model_name = "TeenyTinyLlama"
 
 # Check if the model directory exists
 if not os.path.exists(model_path):
@@ -46,14 +46,16 @@ llm_pipeline = pipeline(
 
 def generate_response(example):
     augmented_prompt = example['augmented_prompt']
-    temperature = 0.7
-    top_p = 0.9
+    temperature = 0.3
+    top_p = 0.3
+    top_k = 30
 
     response = llm_pipeline(
         augmented_prompt,
         do_sample=True,  # If True parameters such as temperature and top_p influence the generation of the text.
         temperature=temperature,
         top_p=top_p,
+        top_k=top_k,
         max_new_tokens=300
     )[0]['generated_text']
     response = response.replace(augmented_prompt, "")
