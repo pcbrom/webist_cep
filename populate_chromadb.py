@@ -19,23 +19,28 @@ if os.path.exists(DB_PATH):
 # Create new database
 print("Creating new ChromaDB database")
 client = chromadb.PersistentClient(path=DB_PATH)
-collection = client.get_or_create_collection(name="ncm-all-data")
+collection = client.get_or_create_collection(name="cep")
 
 # Load data from CSV
 with tqdm(total=100, desc="Loading data") as pbar:
-    df = pl.read_csv('lobradouro', separator='\t', encoding='utf-8', n_threads=N_THREADS)
+    df = pl.read_csv('logradouro.csv', separator='\t', encoding='utf-8', n_threads=N_THREADS)
     pbar.update(100)
 
 # Optimized processing: Create a single embedding per document
 def format_document(row):
-    text = f"NCM: {row['NCM']} | Rótulo: {row['rotulo']} | Produto: {row['XPROD']}"
+    cep = row['CEP'] if row['CEP'] else ""
+    descricao = row['descricao'] if row['descricao'] else ""
+    complemento = row['complemento'] if row['complemento'] else ""
+    descricao_bairro = row['descricao_bairro'] if row['descricao_bairro'] else ""
+    
+    text = f"CEP: {cep} | Descrição: {descricao} | Complemento: {complemento} | Descrição Bairro: {descricao_bairro}"
     return {
         "text": text,  # Text to be transformed into embedding
         "metadata": {   # Metadata for advanced filtering
-            "NCM": row['NCM'],
-            "rotulo": row['rotulo'],
-            "Item": row['Item'],
-            "Produto": row['XPROD']
+            "CEP": cep,
+            "descricao": descricao,
+            "complemento": complemento,
+            "descricao_bairro": descricao_bairro
         }
     }
 

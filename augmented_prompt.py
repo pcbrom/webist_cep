@@ -20,7 +20,7 @@ model = 'gpt-4o-mini-2024-07-18'
 
 # Connect to ChromaDB
 client = chromadb.PersistentClient(path="chroma_db")
-collection = client.get_collection(name="ncm-all-data")
+collection = client.get_collection(name="cep")
 
 # Load Sentence Transformer model
 model_sentence = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
