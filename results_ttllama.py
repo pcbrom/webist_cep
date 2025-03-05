@@ -56,7 +56,7 @@ def generate_response(example):
         temperature=temperature,
         top_p=top_p,
         top_k=top_k,
-        max_new_tokens=300
+        max_new_tokens=600
     )[0]['generated_text']
     response = response.replace(augmented_prompt, "")
     return {'results': response}
