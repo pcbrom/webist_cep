@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 import pandas as pd
-from tqdm import tqdm
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from datasets import Dataset
@@ -22,11 +21,8 @@ if not os.path.exists(model_path):
     raise OSError(f"Model directory does not exist: {model_path}. Download the model first.")
 
 # Load the CSV file
-csv_file = "augmented_prompt_common_rag.csv"
+csv_file = "augmented_prompt.csv"
 df = pd.read_csv(csv_file, decimal='.', sep=',', encoding='utf-8')
-df = df[df['model'] == model_name]
-cols_to_fill = ['results', 'score']
-df[cols_to_fill] = df[cols_to_fill].fillna('')
 print(df)
 
 # Convert DataFrame to Dataset
@@ -50,8 +46,8 @@ llm_pipeline = pipeline(
 
 def generate_response(example):
     augmented_prompt = example['augmented_prompt']
-    temperature = float(example['temperature'])
-    top_p = float(example['top_p'])
+    temperature = 0.7
+    top_p = 0.9
 
     response = llm_pipeline(
         augmented_prompt,
@@ -70,7 +66,7 @@ processed_dataset = dataset.map(generate_response)
 df['results'] = processed_dataset['results']
 
 # Save the updated DataFrame
-output_filename = f"experimental_design_results_{model_name}.csv"
+output_filename = f"results/experimental_design_results_{model_name}.csv"
 df.to_csv(output_filename, index=False)
 
 print(f"Completed. Results saved in {output_filename}")
