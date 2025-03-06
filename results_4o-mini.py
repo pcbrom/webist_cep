@@ -26,7 +26,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
         print("min. pause...")
         time.sleep(60)
     try:
-        augmented_prompt = row['augmented_prompt']
+        augmented_prompt = row['augmented_prompt'] + "Use exclusivamente a informação fornecida no contexto. Não utilize seu conhecimento prévio."
         temperature = 0.3
         top_p = 0.3
         
