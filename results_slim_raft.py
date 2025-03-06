@@ -41,7 +41,7 @@ llm_pipeline = pipeline(
 )
 
 def generate_response(example):
-    augmented_prompt = example['augmented_prompt']
+    augmented_prompt = example['augmented_prompt'] + "Use exclusivamente a informação fornecida no contexto. Não utilize seu conhecimento prévio."
     temperature = 0.3
     top_p = 0.3
     top_k = 30
